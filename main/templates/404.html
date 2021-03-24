@@ -1,0 +1,10 @@
+{% extends 'main/base.html' %}
+
+{% block title %} Ошбика старницы {% endblock %}
+{% block content %}
+<div class="container text-center mt-5">
+    <h1>Страницы не существует</h1>
+    <p>Попробуйте снова</p>
+    <a href="{% url 'main' %}"><button type="button" class="btn btn-info"> Home </button></a>
+</div>
+{% endblock %}
