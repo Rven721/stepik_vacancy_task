@@ -1,11 +1,10 @@
 from django.db.models import Count
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from main.models import Company, Specialty, Vacancy
 
-
-# Create your views here.
 
 class MainView(TemplateView):
     template_name = 'main/index.html'
@@ -22,10 +21,8 @@ class CompanyCardView(TemplateView):
 
     def get_context_data(self, comp_id):
         context = super().get_context_data()
-        context['company'] = Company.objects.filter(id=comp_id)
         context['vacancies'] = Vacancy.objects.filter(company__id=comp_id)
-        if comp_id not in [company.id for company in Company.objects.all()]:
-            raise Http404
+        context['company'] = get_object_or_404(Company, id=comp_id)
         return context
 
 
@@ -43,6 +40,7 @@ class SpecialityView(TemplateView):
     template_name = 'main/vacancies_speciality.html'
 
     def get_context_data(self, cat_name):
+        """не применяю get_object_or_404 специально, чтобы напомнить сбе, что есть несколько варинтов броскния ошибки"""
         context = super().get_context_data()
         context['title'] = Specialty.objects.filter(code=cat_name)
         context['vacancies'] = Vacancy.objects.filter(specialty__code=cat_name)
@@ -56,7 +54,5 @@ class VacancyView(TemplateView):
 
     def get_context_data(self, vac_id):
         context = super().get_context_data()
-        context['vacancy'] = Vacancy.objects.filter(id=vac_id)
-        if vac_id not in [vacancy.id for vacancy in Vacancy.objects.all()]:
-            raise Http404
+        context['vacancy'] = get_object_or_404(Vacancy, id=vac_id)
         return context

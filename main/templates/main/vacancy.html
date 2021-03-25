@@ -2,7 +2,7 @@
 {% load static %}
 {% load my_tags %}
 
-{% block title %} {{vacancy.0.title}} {% endblock %}
+{% block title %} {{vacancy.title}} {% endblock %}
 
 
 {% block content %}
@@ -17,17 +17,17 @@
             <section class="pl-3">
                 <a href="#"><img src="https://place-hold.it/130x80" width="130" height="80" alt=""></a>
                 <div class="d-flex align-items-baseline align-content-baseline">
-                    <h1 class="h2 mt-4 font-weight-bold">{{vacancy.0.title}}</h1>
-                    <p class="m-0 pl-3">{{vacancy.0.salary_min}} – {{vacancy.0.salary_max}} Р</p>
+                    <h1 class="h2 mt-4 font-weight-bold">{{vacancy.title}}</h1>
+                    <p class="m-0 pl-3">{{vacancy.salary_min}} – {{vacancy.salary_max}} Р</p>
                 </div>
-                <p class="mt-2">{{vacancy.0.skills|custom_sep:' • '}}</p>
-                <p class="text-muted mb-4">{{vacancy.0.company.name|title}}
-                    ({{vacancy.0.company.employee_count|ru_pluralize:'человек,человека,человек'}}),
-                    {{vacancy.0.company.location}}</p>
+                <p class="mt-2">{{vacancy.skills|custom_sep:' • '}}</p>
+                <p class="text-muted mb-4">{{vacancy.company.name|title}}
+                    ({{vacancy.company.employee_count|ru_pluralize:'человек,человека,человек'}}),
+                    {{vacancy.company.location}}</p>
                 <div style="line-height: 1.8;">
                     <p>{{vacancy.0.company.description}}</p>
                     {% autoescape off %}
-                    {{vacancy.0.description}}
+                    {{vacancy.description}}
                     {% endautoescape %}
                <form action="/echo" class="card mt-4 mb-3" enctype="multipart/form-data">
             <div class="card-body mx-3">
