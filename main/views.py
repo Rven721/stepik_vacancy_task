@@ -1,7 +1,7 @@
 from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 
 from main.models import Company, Specialty, Vacancy
 
@@ -56,3 +56,9 @@ class VacancyView(TemplateView):
         context = super().get_context_data()
         context['vacancy'] = get_object_or_404(Vacancy, id=vac_id)
         return context
+
+
+class VacancyView2(DetailView):
+    """При использовании такой вьюхи вместо vac_id мы в url должны определить переменную pk(primary key)"""
+    model = Vacancy
+    template_name = 'main/vacancy.html'
