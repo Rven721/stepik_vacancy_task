@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 
 
@@ -29,7 +31,7 @@ class Vacancy(models.Model):
     description = models.TextField()
     salary_min = models.IntegerField()
     salary_max = models.IntegerField()
-    published_at = models.DateField()
+    published_at = models.DateField(default=date.today())
 
     def __str__(self):
         return f'{self.title}'
