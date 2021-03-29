@@ -17,7 +17,7 @@ class Company(models.Model):
 class Specialty(models.Model):
     code = models.CharField(max_length=15)
     title = models.CharField(max_length=120)
-    picture = models.URLField(default="https://place-hold.it/100x60'")
+    picture = models.URLField(default="https://place-hold.it/100x60")
 
     def __str__(self):
         return f'{self.code} {self.title}'
