@@ -18,13 +18,26 @@
       <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
         <ul class="navbar-nav col-10">
           {% url 'vacancies' as vac_link %}
-          <li class="nav-item {% if request.path == vac_link %} active {% endif %}">
+          <li class="nav-item {% if self.path == vac_link %} active {% endif %}">
             <a class="nav-link" href="{% url 'vacancies' %}">Вакансии</a>
           </li>
         </ul>
         <ul class="navbar-nav col-2 justify-content-end">
           <li class="nav-item active">
-            <a href="#" class="nav-link font-weight-bold">Вход</a>
+            {% if user.is_anonymous %}
+            <a href="{% url 'login' %}" class="nav-link font-weight-bold">Вход</a>
+            {% else %}
+            <div class="btn-group">
+              <button type="button" class="btn dropdown-toggle font-weight-bold" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{user.first_name}} {{user.last_name}}
+              </button>
+              <div class="dropdown-menu dropdown-menu-right mt-3">
+                <a href="{% url 'my_resume' %}" class="dropdown-item py-2">Резюме</a>
+                <a href="{% url 'my_company' %}" class="dropdown-item py-2">Компания</a>
+                <a href="{% url 'logout' %}" class="dropdown-item py-2">Выйти</a>
+              </div>
+            </div>
+            {% endif %}
           </li>
         </ul>
       </div>

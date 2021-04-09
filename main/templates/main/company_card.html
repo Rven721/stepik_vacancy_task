@@ -1,4 +1,4 @@
-{% extends 'main/base.html' %}
+{% extends 'main/base/base.html' %}
 {% load static %}
 {% load my_tags %}
 
@@ -11,7 +11,7 @@
     </div>
     <section>
       <div class="text-center">
-        <img src="https://place-hold.it/130x80" width="130" height="80" alt="">
+        <img src="{{ company.logo.url }}" width="150" height="90" alt="">
       </div>
       <h1 class="h1 text-center mx-auto mt-0 pt-1" style="font-size: 70px;"><strong>{{company.name|title}}</strong></h1>
       <p class="text-center pt-1">Компания, {{company.location}}, {{vacancies.count|ru_pluralize:'вакансия,вакансии,вакансий'}}</p>
@@ -28,7 +28,7 @@
                   <p class="text-muted pt-1">{{vacancy.published_at|date:"d E"}}</p>
                 </div>
                 <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
-                   <a href="{% url 'vacancy' vacancy.id %}"><img src="https://place-hold.it/130x80" width="130" height="80" alt=""></a>
+                   <a href="{% url 'vacancy' vacancy.id %}"><img src="{{ vacancy.company.logo.url }}" width="130" height="80" alt=""></a>
                 </div>
               </div>
             </div>

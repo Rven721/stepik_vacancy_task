@@ -36,7 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'accounts',
     'crispy_forms',
+    'phonenumber_field',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +121,21 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'static/'
 
 USE_THOUSAND_SEPARATOR = True
+
+LOGIN_REDIRECT_URL = '/mycompany/'
+
+LOGOUT_REDIRECT_URL = '/'
+
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+
+PHONENUMBER_DEFAULT_REGION = 'RU'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = 'media'
+
+MEDIA_COMPANY_IMAGE_DIR = 'company_images'
+
+MEDIA_SPECIALITY_IMAGE_DIR = 'speciality_images'

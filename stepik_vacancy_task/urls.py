@@ -14,9 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth.views import LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 
-import main.views as mv
+import main.views.main as mv
+import main.views.my_company as company
+import main.views.my_vacancy as vacancy
+import main.views.my_resume as resume
+import accounts.views as av
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +33,28 @@ urlpatterns = [
     path('vacancies/cat/<str:cat_name>', mv.SpecialityView.as_view(), name='vacancies_cat'),
     path('vacancies/<int:vac_id>/', mv.VacancyView.as_view(), name='vacancy'),
     path('companies/<int:comp_id>/', mv.CompanyCardView.as_view(), name='company'),
-
+    path('register/', av.MyRegisterView.as_view(), name='register'),
+    path('login/', av.MyLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('vacancies/<int:vac_id>/send/', mv.ApplicationSendView.as_view(), name='send'),
+    path('mycompany/letsstart/', company.LetsStartView.as_view(), name='letsstart'),
+    path('mycompany/create/', company.MycompanyCreateView.as_view(), name='my_company_create'),
+    path('mycompany/<int:pk>/delete/', company.MyCompanyDeleteView.as_view(), name='my_company_delete'),
+    path('mycompany/', company.MyCompanyView.as_view(), name='my_company'),
+    path('mycompany/vacancies/', vacancy.MyVacancies.as_view(), name='my_company_vacancies'),
+    path('mycompany/vacancies/create/', vacancy.MyVacancyCreateView.as_view(), name='my_company_vac_create'),
+    path('mycompany/vacancies/<int:vac_id>/', vacancy.MyVacancy.as_view(), name='my_company_vacancy'),
+    path('mycompany/vacancies/<int:pk>/delete/', vacancy.MyVacancyDeleteView.as_view(), name='my_company_vac_delete'),
+    path('applications/<int:vac_id>/', vacancy.ApplicationsListView.as_view(), name='applications_list'),
+    path('myresume/', resume.MyResumeView.as_view(), name='my_resume'),
+    path('myresume/create/', resume.MyResumeCreate.as_view(), name='my_resume_create'),
+    path('myresume/create/success/', resume.MyResumeSuccessView.as_view(), name='my_resume_success'),
+    path('myresume/<int:pk>/delete/', resume.MyResumeDeleteView.as_view(), name='my_resume_delete'),
+    path('search/', mv.VacancySearchView.as_view(), name='vacancy_search'),
+    path('resume/<int:pk>', mv.ResumeView.as_view(), name='resume'),
+    path('tinymce/', include('tinymce.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

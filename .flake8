@@ -4,7 +4,8 @@ exclude =
     .git,
     __pycache__,
     .venv,
-    data.py
-    script.py
+    data.py,
+    script.py,
+    ./main/migrations/,
 max-cognitive-complexity = 5
 max-complexity = 5
