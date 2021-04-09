@@ -1,0 +1,34 @@
+{% extends 'main/base/account_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Моя компания {% endblock %}
+
+{% block content %}
+  <main class="container mt-3 pb-5">
+    <div class="row mt-5">
+      {% include 'main/base/account_side_menu.html' %}
+      <div class="col-12 col-lg-8">
+        <div class="card">
+          <div class="card-body px-4 pb-4">
+            <!-- Tab -->
+            <section class="tab-pane fade show active">
+              <h2 class="h4 pt-2 pb-3">Информация о&nbsp;компании</h2>
+              {% if updated_data is True %}
+              <p class="alert alert-info" role="alert">
+                Информация о компании обновлена
+              </p>
+              {% endif %}
+              {% crispy  form %}
+              {% if company.pk %}
+              <div class="form-group mt-3">
+                <a href="{% url 'my_company_delete' company.id %}">Удалить компанию</a>
+              </div>
+              {% endif %}
+            </section>
+            <!-- END Tab -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}

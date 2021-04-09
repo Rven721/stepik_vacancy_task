@@ -1,0 +1,22 @@
+{% extends 'main/base/account_base.html' %}
+
+{% block title %} Удалить резюме {% endblock %}
+
+{% block content %}
+  <main class="container mt-3 pb-5">
+    <section class="col-12 col-lg-6 offset-lg-3 mt-5 card">
+      <div class="card-body px-3 pb-4">
+        {% if user != resume.user %}
+        <h1> Нет прав на удаление записи </h1>
+        {% else %}
+        <h1 class="h4 pt-2">{{request.user.first_name}} {{request.user.last_name}}</h1>
+        <p class="mt-2">Действительно хотите удалить резюме?</p>
+        <form method="post" aciton="{% url 'my_resume' %}">
+        {% csrf_token %}
+        <input  type="submit" class="bnt btn-danger" value="Удалить">
+        {% endif %}
+        </form>
+      </div>
+    </section>
+  </main>
+{% endblock %}

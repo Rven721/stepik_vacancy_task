@@ -1,0 +1,41 @@
+{% extends 'main/base/base.html' %}
+{% load my_tags %}
+
+{% block title %} Вакансии | Джуманджи {% endblock %}
+{% block content %}
+<main class="container mt-3">
+    <section>
+      <h1 class="h1 text-center mx-auto mt-4 pt-5" style="font-size: 70px;"><strong>Результаты поиска</strong></h1>
+      <p class="text-center mx-auto mt-3 pt-3" style="font-size: 30px;">Вы искали: {{request.GET.keyword}}</p>
+      {% if vacancies.count == 0 %}
+      <div class="container text-center mt-3">
+      <p class="text-center pt-1"> Вакансии по Вашему запросу не найдены </p>
+      <a href="{{request.META.HTTP_REFERER}}" class="btn btn-warning">Вернуться</a>
+      </div>
+      {% else %}
+      <p class="text-center pt-1"> Найдено: {{vacancies.count|ru_pluralize:'вакансия,вакансии,вакансий'}} </p>
+      {% endif %}
+      <div class="row mt-5">
+        <div class="col-12 col-lg-8 offset-lg-2 m-auto">
+          {% for vacancy in vacancies %}
+          <div class="card mb-4">
+            <div class="card-body px-4">
+              <div class="row">
+                <div class="col-12 col-md-8 col-lg-9">
+                  <h2 class="h2 pb-2">{{vacancy.title}}</h2>
+                  <p class="mb-2">{{vacancy.skills|custom_sep:' • '}}</p>
+                  <p>От {{vacancy.salary_min}} до {{vacancy.salary_max}} руб.</p>
+                  <p class="text-muted pt-1">{{vacancy.published_at|date:'d E'}}</p>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
+                  <a href="{% url 'vacancy' vacancy.id %}"><img src="{{ vacancy.company.logo.url }}" width="130" height="80" alt=""></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+</main>
+{% endblock %}

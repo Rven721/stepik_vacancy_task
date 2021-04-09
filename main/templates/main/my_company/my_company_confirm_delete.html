@@ -1,0 +1,22 @@
+{% extends 'main/base/account_base.html' %}
+
+{% block title %} Удалить компанию {% endblock %}
+
+{% block content %}
+<main class="container mt-3 pb-5">
+    <section class="col-12 col-lg-6 offset-lg-3 mt-5 card">
+        <div class="card-body px-3 pb-4">
+            <h1 class="h4 pt-2">{{object.name}}</h1>
+            {%if user != company.owner %}
+            <p> Нет прав на удаление компании </p>
+            {% else %}
+            <p class="mt-2">Действительно хотите удалить команидю?</p>
+            <form method="post">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-danger" value="Удалить">
+                {% endif %}
+            </form>
+        </div>
+    </section>
+</main>
+{% endblock %}

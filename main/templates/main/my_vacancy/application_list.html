@@ -1,0 +1,36 @@
+{% extends 'main/base/account_base.html' %}
+{% load my_tags %}
+
+{% block title %} Отклики | Джуманджи {% endblock %}
+{% block content %}
+ <main class="container mt-3">
+    <section>
+      <h1 class="h1 text-center mx-auto mt-4 pt-5" style="font-size: 70px;"><strong>{{applications.0.vacancy.title}}</strong></h1>
+      <p class="text-center pt-1">{{applications.count|ru_pluralize:'отклик,отклика,откликов'}}</p>
+      <div class="row mt-5">
+        <div class="col-12 col-lg-8 offset-lg-2 m-auto">
+          {% for application in applications %}
+          <div class="card mb-4">
+            <div class="card-body px-4">
+              <div class="row">
+                <div class="col-12 col-md-8 col-lg-9">
+                  <h2 class="h2 pb-2">{{application.vacancy.title}}</h2>
+                  <p class="mb-2">{{application.written_username}}</p>
+                  <p>Тел: {{ application.written_phone}} </p>
+                  <p>{{application.written_cover_letter}}</p>
+                  {% if application.user.my_resume.id %}
+                  <a href="{% url 'resume' application.user.my_resume.id %}" class="btn btn-outline-success">Резюме</a>
+                  {% else %}
+                  <p>Резюме отсутствует</p>
+                  {% endif %}
+                  </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+{% endblock %}

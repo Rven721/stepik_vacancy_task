@@ -1,0 +1,49 @@
+{% extends 'main//base/account_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} {{vacancy.title}} {% endblock %}
+
+
+{% block content %}
+<main class="container mt-3 pb-5">
+    <div class="row mt-5">
+        <div class="col-12 col-lg-2">
+            <div class="pl-3 mb-5">
+                <p><a href="{{request.META.HTTP_REFERER}}">Назад</a></p>
+            </div>
+        </div>
+    </div>
+        <section class="col-12 col-lg-8 offset-lg-3 mt-5 card">
+        <div class="card-body px-3 pb-4">
+        <div class="col-12 col-lg-8">
+            <section class="pl-3">
+                <div class="d-flex align-items-baseline align-content-baseline">
+                    <h1 class="h2 mt-4 font-weight-bold">{{resume.name}} {{resume.surname}}</h1>
+                </div>
+                <div class="row mt-4">
+                 <p class="m-0 pl-3">Статус: {{ resume.status }}</p>
+                 <p class="m-0 pl-3">Уровень ЗП: {{resume.salary}} р.</p>
+                </div>
+                <div class="row mt-4">
+                 <p class="m-0 pl-3">Специальность: {{resume.specialty.title}}</p>
+                 <p class="m-0 pl-3">Уровень: {{resume.grade}}</p>
+                </div>
+                <div class="row mt-4">
+                 <p class="m-0 pl-3">Образование:</p>
+                 <p class="m-0 pl-3">{{resume.education|safe}}</p>
+                </div>
+                <div class="row mt-4">
+                 <p class="m-0 pl-3">Опыт работы:</p><br>
+                </div>
+                <div>
+                 <p class="m-0 pl-3">{{resume.experience|safe}}</p>
+                </div>
+                <div class="row mt-4">
+                <p class="m-0 pl-3">Портфолио: {{resume.portfolio}}</p>
+                </div>
+               </section>
+        </div>
+        </div>
+        </section>
+</main>
+{% endblock %}

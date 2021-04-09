@@ -1,0 +1,17 @@
+
+<div class="col-12 col-lg-4">
+        <aside class="pt-3 pb-4 px-4 mb-5 card">
+          <h1 class="h4 pt-2 pb-2">Моя компания</h1>
+          <div class="nav flex-column nav-pills">
+            {% url  'my_company' as my_company_link %}
+            {% url 'my_company_create' as my_company_create_link %}
+            <a class="nav-link {% if request.path == my_company_link or request.path == my_company_create_link %} active {% endif %}" href="{% url 'my_company' %}">1. Информация о&nbsp;компании</a>
+            {% url 'my_company_vacancies' as my_vacancies_link %}
+            {% url 'my_company_vac_create' as my_vacancy_crate_link %}
+            {% url 'my_company_vacancy' vac_id as my_vacancy_link %}
+            {% if user.my_company.id %}
+            <a class="nav-link {% if request.path == my_vacancies_link or request.path == my_vacancy_crate_link or request.path == my_vacancy_link %} active {% endif %}" href="{%  url 'my_company_vacancies' %}">2. Вакансии</a>
+            {% endif %}
+          </div>
+        </aside>
+</div>
