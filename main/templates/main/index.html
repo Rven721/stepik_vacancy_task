@@ -21,12 +21,11 @@
                     </div>
                 </form>
                 <p>Например:
-                    {% for specialty in specialties %}
-                        {% if forloop.counter <= 4 %}
-                    <a href="{% url 'vacancies_cat' specialty.code %}"
-                       class="text-dark border-bottom border-dark m-1 text-decoration-none">{{ specialty.title }}</a>
-                        {% endif %}
-                    {% endfor %}
+                    <a class="text-dark border-bottom border-dark m-1 text-decoration-none" href="{% url 'vacancy_search' %}?keyword=python">Python</a>
+                    <a class="text-dark border-bottom border-dark m-1 text-decoration-none" href="{% url 'vacancy_search' %}?keyword=фронэнд">Flask</a>
+                    <a class="text-dark border-bottom border-dark m-1 text-decoration-none" href="{% url 'vacancy_search' %}?keyword=Тестирование">Тестирование</a>
+                    <a class="text-dark border-bottom border-dark m-1 text-decoration-none" href="{% url 'vacancy_search' %}?keyword=gamedev">Gamedev</a>
+                    <a class="text-dark border-bottom border-dark m-1 text-decoration-none" href="{% url 'vacancy_search' %}?keyword=swift">SWIFT</a>
                 </p>
             </div>
         </div>

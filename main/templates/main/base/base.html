@@ -18,7 +18,7 @@
       <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
         <ul class="navbar-nav col-10">
           {% url 'vacancies' as vac_link %}
-          <li class="nav-item {% if self.path == vac_link %} active {% endif %}">
+          <li class="nav-item {% if request.path == vac_link %} active {% endif %}">
             <a class="nav-link" href="{% url 'vacancies' %}">Вакансии</a>
           </li>
         </ul>
