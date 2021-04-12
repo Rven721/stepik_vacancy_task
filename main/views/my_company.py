@@ -26,14 +26,8 @@ class MyCompanyView(LoginRequiredMixin, View):
 
     def post(self, request):
         company = Company.objects.filter(owner=request.user).first()
-        new_data = CompanyForm(request.POST, request.FILES)
+        new_data = CompanyForm(request.POST, request.FILES, instance=company)
         if new_data.is_valid():
-            new_company_data = new_data.cleaned_data
-            company.name = new_company_data['name']
-            company.location = new_company_data['location']
-            company.logo = new_company_data['logo']
-            company.description = new_company_data['description']
-            company.employee_count = new_company_data['employee_count']
             company.save()
             ctx = {
                 'form': CompanyForm(instance=company),

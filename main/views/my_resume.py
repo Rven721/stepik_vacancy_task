@@ -25,18 +25,8 @@ class MyResumeView(LoginRequiredMixin, View):
 
     def post(self, request):
         resume = Resume.objects.filter(user=request.user).first()
-        resume_data = ResumeForm(request.POST)
+        resume_data = ResumeForm(request.POST, instance=resume)
         if resume_data.is_valid():
-            updated_resume_data = resume_data.cleaned_data
-            resume.name = updated_resume_data['name']
-            resume.surname = updated_resume_data['surname']
-            resume.status = updated_resume_data['status']
-            resume.salary = updated_resume_data['salary']
-            resume.specialty = updated_resume_data['specialty']
-            resume.grade = updated_resume_data['grade']
-            resume.education = updated_resume_data['education']
-            resume.experience = updated_resume_data['experience']
-            resume.portfolio = updated_resume_data['portfolio']
             resume.save()
             ctx = {
                 'resume': resume,

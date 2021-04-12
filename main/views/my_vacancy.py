@@ -44,16 +44,8 @@ class MyVacancy(LoginRequiredMixin, View):
         if request.user != vacancy.company.owner:
             raise Http404
         applications = Application.objects.filter(vacancy__id=vac_id)
-        vacancy_data_form = VacancyForm(request.POST)
+        vacancy_data_form = VacancyForm(request.POST, instance=vacancy)
         if vacancy_data_form.is_valid():
-            new_vac_data = vacancy_data_form.cleaned_data
-            vacancy.title = new_vac_data['title']
-            vacancy.specialty = new_vac_data['specialty']
-            vacancy.skills = new_vac_data['skills']
-            vacancy.description = new_vac_data['description']
-            vacancy.salary_min = new_vac_data['salary_min']
-            vacancy.salary_max = new_vac_data['salary_max']
-            vacancy.save()
             ctx = {
                 'vacancy': vacancy,
                 'vacancy_form': VacancyForm(instance=vacancy),
