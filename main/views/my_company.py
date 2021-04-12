@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -7,7 +9,9 @@ from main.forms import CompanyForm
 from main.models import Company
 
 
-class MyCompanyView(View):
+class MyCompanyView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'login'
 
     def get(self, request):
         company = Company.objects.filter(owner=request.user).first()
@@ -39,7 +43,9 @@ class MyCompanyView(View):
         return render(request, 'main/my_company/my_company.html', {'form': new_data})
 
 
-class MycompanyCreateView(View):
+class MycompanyCreateView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'login'
 
     def get(self, request):
         if Company.objects.filter(owner=request.user):
@@ -63,14 +69,25 @@ class MycompanyCreateView(View):
         return render(request, 'main/my_company/my_company.html', {'form': form})
 
 
-class LetsStartView(TemplateView):
+class LetsStartView(LoginRequiredMixin, TemplateView):
     template_name = 'main/lets_start.html'
+    login_url = '/login/'
+    redirect_field_name = 'login'
 
 
-class MyCompanyDeleteView(DeleteView):
+class MyCompanyDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
     model = Company
     template_name = 'main/my_company/my_company_confirm_delete.html'
     context_object_name = 'company'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.owner != request.user:
+            raise Http404
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
     def get_success_url(self):
         return reverse_lazy('my_company')

@@ -1,13 +1,17 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, TemplateView
-from main.models import Vacancy, Application, Company
+
 from main.forms import VacancyForm
+from main.models import Vacancy, Application, Company
 
 
-class MyVacancies(View):
+class MyVacancies(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'login'
 
     def get(self, request):
         my_vacancies = Vacancy.objects.filter(company__owner=request.user).annotate(app_count=Count('applications'))
@@ -17,7 +21,9 @@ class MyVacancies(View):
         return render(request, 'main/my_vacancy/my_vacancies.html', ctx)
 
 
-class MyVacancy(View):
+class MyVacancy(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'login'
 
     def get(self, request, vac_id):
         vacancy = Vacancy.objects.filter(id=vac_id).first()
@@ -35,6 +41,8 @@ class MyVacancy(View):
 
     def post(self, request, vac_id):
         vacancy = Vacancy.objects.filter(id=vac_id).first()
+        if request.user != vacancy.company.owner:
+            raise Http404
         applications = Application.objects.filter(vacancy__id=vac_id)
         vacancy_data_form = VacancyForm(request.POST)
         if vacancy_data_form.is_valid():
@@ -61,7 +69,9 @@ class MyVacancy(View):
         return render(request, 'main/my_vacancy/my_vacancy.html', ctx)
 
 
-class MyVacancyCreateView(View):
+class MyVacancyCreateView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'login'
 
     def get(self, request):
         ctx = {'vacancy_form': VacancyForm}
@@ -78,16 +88,27 @@ class MyVacancyCreateView(View):
         return render(request, 'main/my_vacancy/my_vacancy.html', ctx)
 
 
-class MyVacancyDeleteView(DeleteView):
+class MyVacancyDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
     model = Vacancy
     template_name = 'main/my_vacancy/my_vacancy_confirm_delete.html'
     context_object_name = 'vacancy'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user != request.user:
+            raise Http404
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
     def get_success_url(self):
         return reverse_lazy('my_company_vacancies')
 
 
-class ApplicationsListView(TemplateView):
+class ApplicationsListView(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
     template_name = 'main/my_vacancy/application_list.html'
 
     def get_context_data(self, vac_id):

@@ -96,9 +96,10 @@ class VacancySearchView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('keyword')
-        return Vacancy.objects.filter(Q(title__icontains=query) |
-                                      Q(description__icontains=query) |
-                                      Q(skills__icontains=query) |
-                                      Q(specialty__code__icontains=query) |
-                                      Q(specialty__title__icontains=query),
-                                      )
+        return Vacancy.objects.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query) |
+            Q(skills__icontains=query) |
+            Q(specialty__code__icontains=query) |
+            Q(specialty__title__icontains=query),
+        )
