@@ -97,7 +97,7 @@ class MyVacancyDeleteView(LoginRequiredMixin, DeleteView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.user != request.user:
+        if self.object.company.owner != request.user:
             raise Http404
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
