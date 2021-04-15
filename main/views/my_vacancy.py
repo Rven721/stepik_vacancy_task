@@ -46,6 +46,7 @@ class MyVacancy(LoginRequiredMixin, View):
         applications = Application.objects.filter(vacancy__id=vac_id)
         vacancy_data_form = VacancyForm(request.POST, instance=vacancy)
         if vacancy_data_form.is_valid():
+            vacancy.save()
             ctx = {
                 'vacancy': vacancy,
                 'vacancy_form': VacancyForm(instance=vacancy),
