@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import View, DeleteView, TemplateView
 
@@ -9,13 +10,12 @@ from main.models import Resume
 
 
 class MyResumeView(LoginRequiredMixin, View):
-    login_url = '/login/'
     redirect_field_name = 'login'
 
     def get(self, request):
-        resume = Resume.objects.filter(user=request.user).first()
-        if resume is None:
+        if Resume.objects.filter(user=request.user).first() is None:
             return render(request, 'main/my_resume/my_resume_lets_start.html')
+        resume = get_object_or_404(Resume, user=request.user)
         ctx = {
             'resume': resume,
             'resume_data': ResumeForm(instance=resume),
@@ -28,22 +28,17 @@ class MyResumeView(LoginRequiredMixin, View):
         resume_data = ResumeForm(request.POST, instance=resume)
         if resume_data.is_valid():
             resume.save()
-            ctx = {
-                'resume': resume,
-                'resume_data': ResumeForm(instance=resume),
-                'update_flag': True,
-            }
-            return render(request, 'main/my_resume/my_resume.html', ctx)
+            messages.success(request, 'Данные обновлены!')
+            return redirect('my_resume')
         ctx = {
             'resume': resume,
             'resume_data': resume_data,
-            'update_flag': False,
         }
+        messages.error(request, 'Данные не обновлены!')
         return render(request, 'main/my_resume/my_resume.html', ctx)
 
 
 class MyResumeCreate(LoginRequiredMixin, View):
-    login_url = '/login/'
     redirect_field_name = 'login'
 
     def get(self, request):
@@ -60,10 +55,7 @@ class MyResumeCreate(LoginRequiredMixin, View):
             resume.user = request.user
             resume.save()
             return HttpResponseRedirect(reverse('my_resume_success'))
-        ctx = {
-            'resume_data': resume_data,
-            'update_flag': False,
-        }
+        ctx = {'resume_data': resume_data,}
         return render(request, 'main/my_resume/my_resume.html', ctx)
 
 
@@ -72,7 +64,6 @@ class MyResumeSuccessView(TemplateView):
 
 
 class MyResumeDeleteView(LoginRequiredMixin, DeleteView):
-    login_url = '/login/'
     redirect_field_name = 'login'
     template_name = 'main/my_resume/my_resume_confirm_delete.html'
     model = Resume

@@ -3,21 +3,25 @@
 {% block title %} Мое резюме {% endblock %}
 
 {% block content %}
-  <main class="container mt-3 pb-5">
+<main class="container mt-3 pb-5">
     <section class="col-12 col-lg-6 offset-lg-3 mt-5 card">
-      <div class="card-body px-3 pb-4">
-        <h1 class="h4 pt-2 pb-3">Мое резюме</h1>
-        {% if update_flag is True %}
-         <p class="alert alert-info" role="alert">Ваше резюме обновлено!</p>
-        {% endif %}
-        {% crispy  resume_data %}
-          <div class="form-group">
-            {% if resume.id %}
-            <a href="{% url 'my_resume_delete' resume.id %}" class="btn btn-danger mt-2">Удалить резюме</a>
+        <div class="card-body px-3 pb-4">
+            <h1 class="h4 pt-2 pb-3">Мое резюме</h1>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-primary" role="alert">
+                {{message}}
+            </div>
+            {% endfor %}
             {% endif %}
-          </div>
-        </form>
-      </div>
+            {% crispy resume_data %}
+            <div class="form-group">
+                {% if resume.id %}
+                <a href="{% url 'my_resume_delete' resume.id %}" class="btn btn-danger mt-2">Удалить резюме</a>
+                {% endif %}
+            </div>
+            </form>
+        </div>
     </section>
-  </main>
+</main>
 {% endblock %}

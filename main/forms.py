@@ -1,6 +1,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
 from django import forms
+from tinymce.widgets import TinyMCE
 
 from main.models import Application, Company, Vacancy, Resume
 
@@ -17,6 +18,7 @@ class ApplicationForm(forms.ModelForm):
 
 
 class CompanyForm(forms.ModelForm):
+    description = forms.CharField(widget=TinyMCE, label='Информация о компании')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -50,6 +52,7 @@ class CompanyForm(forms.ModelForm):
 
 
 class VacancyForm(forms.ModelForm):
+    description = forms.CharField(widget=TinyMCE, label='Описание вакансии')
 
     def clean(self):
         super().clean()
@@ -91,6 +94,8 @@ class VacancyForm(forms.ModelForm):
 
 
 class ResumeForm(forms.ModelForm):
+    education = forms.CharField(widget=TinyMCE, label='Образование')
+    experience = forms.CharField(widget=TinyMCE, label='Опыт')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

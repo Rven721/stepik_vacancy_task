@@ -1,7 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import View, DeleteView, TemplateView
 
@@ -10,7 +11,6 @@ from main.models import Vacancy, Application, Company
 
 
 class MyVacancies(LoginRequiredMixin, View):
-    login_url = '/login/'
     redirect_field_name = 'login'
 
     def get(self, request):
@@ -22,48 +22,36 @@ class MyVacancies(LoginRequiredMixin, View):
 
 
 class MyVacancy(LoginRequiredMixin, View):
-    login_url = '/login/'
     redirect_field_name = 'login'
 
     def get(self, request, vac_id):
-        vacancy = Vacancy.objects.filter(id=vac_id).first()
-        if request.user != vacancy.company.owner:
-            raise Http404
+        vacancy = get_object_or_404(Vacancy, id=vac_id, company__owner=request.user)
         vacancy_form = VacancyForm(instance=vacancy)
         applications = Application.objects.filter(vacancy__id=vac_id)
         ctx = {
             'vacancy': vacancy,
             'vacancy_form': vacancy_form,
             'applications': applications,
-            'updated_vacancy_data': False,
         }
         return render(request, 'main/my_vacancy/my_vacancy.html', ctx)
 
     def post(self, request, vac_id):
-        vacancy = Vacancy.objects.filter(id=vac_id).first()
-        if request.user != vacancy.company.owner:
-            raise Http404
+        vacancy = get_object_or_404(Vacancy, id=vac_id, company__owner=request.user)
         applications = Application.objects.filter(vacancy__id=vac_id)
         vacancy_data_form = VacancyForm(request.POST, instance=vacancy)
         if vacancy_data_form.is_valid():
             vacancy.save()
-            ctx = {
-                'vacancy': vacancy,
-                'vacancy_form': VacancyForm(instance=vacancy),
-                'applications': applications,
-                'updated_vacancy_data': True,
-            }
-            return render(request, 'main/my_vacancy/my_vacancy.html', ctx)
+            messages.success(request, 'Данные обновлены!')
+            return redirect('my_company_vacancy', vac_id)
         ctx = {
             'vacancy_form': vacancy_data_form,
             'applications': applications,
-            'updated_vacancy_data': False,
         }
+        messages.error(request, "Данные не обновлены!")
         return render(request, 'main/my_vacancy/my_vacancy.html', ctx)
 
 
 class MyVacancyCreateView(LoginRequiredMixin, View):
-    login_url = '/login/'
     redirect_field_name = 'login'
 
     def get(self, request):
@@ -78,11 +66,11 @@ class MyVacancyCreateView(LoginRequiredMixin, View):
             new_vacancy.company = Company.objects.filter(owner=request.user).first()
             new_vacancy.save()
             return HttpResponseRedirect(reverse('my_company_vacancies'))
+        messages.error(request, 'В форме допущены ошибки!')
         return render(request, 'main/my_vacancy/my_vacancy.html', ctx)
 
 
 class MyVacancyDeleteView(LoginRequiredMixin, DeleteView):
-    login_url = '/login/'
     redirect_field_name = 'login'
     model = Vacancy
     template_name = 'main/my_vacancy/my_vacancy_confirm_delete.html'
@@ -100,7 +88,6 @@ class MyVacancyDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class ApplicationsListView(LoginRequiredMixin, TemplateView):
-    login_url = '/login/'
     redirect_field_name = 'login'
     template_name = 'main/my_vacancy/application_list.html'
 
