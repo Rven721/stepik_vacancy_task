@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.shortcuts import render, HttpResponseRedirect, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
@@ -12,9 +13,12 @@ from main.models import Resume
 class MyResumeView(LoginRequiredMixin, View):
     redirect_field_name = 'login'
 
-    def get(self, request):
+    def dispatch(self, request, *args, **kwargs):
         if Resume.objects.filter(user=request.user).first() is None:
             return render(request, 'main/my_resume/my_resume_lets_start.html')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
         resume = get_object_or_404(Resume, user=request.user)
         ctx = {
             'resume': resume,
@@ -24,7 +28,7 @@ class MyResumeView(LoginRequiredMixin, View):
         return render(request, 'main/my_resume/my_resume.html', ctx)
 
     def post(self, request):
-        resume = Resume.objects.filter(user=request.user).first()
+        resume = get_object_or_404(Resume, user=request.user)
         resume_data = ResumeForm(request.POST, instance=resume)
         if resume_data.is_valid():
             resume.save()
@@ -41,11 +45,13 @@ class MyResumeView(LoginRequiredMixin, View):
 class MyResumeCreate(LoginRequiredMixin, View):
     redirect_field_name = 'login'
 
-    def get(self, request):
+    def dispatch(self, request, *args, **kwargs):
         if Resume.objects.filter(user=request.user):
             return HttpResponseRedirect(reverse_lazy('my_resume'))
-        ctx = {'resume_data': ResumeForm,
-               'resume': Resume.objects.filter(user=request.user).first()}
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        ctx = {'resume_data': ResumeForm}
         return render(request, 'main/my_resume/my_resume.html', ctx)
 
     def post(self, request):

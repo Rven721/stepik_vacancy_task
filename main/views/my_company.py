@@ -13,9 +13,12 @@ from main.models import Company
 class MyCompanyView(LoginRequiredMixin, View):
     redirect_field_name = 'login'
 
-    def get(self, request):
+    def dispatch(self, request, *args, **kwargs):
         if Company.objects.filter(owner=request.user).first() is None:
             return render(request, 'main/my_company/lets_start.html')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
         company = get_object_or_404(Company, owner=request.user)
         ctx = {
             'form': CompanyForm(instance=company),
@@ -37,9 +40,12 @@ class MyCompanyView(LoginRequiredMixin, View):
 class MycompanyCreateView(LoginRequiredMixin, View):
     redirect_field_name = 'login'
 
-    def get(self, request):
+    def dispatch(self, request, *args, **kwargs):
         if Company.objects.filter(owner=request.user):
             return HttpResponseRedirect(reverse_lazy('my_company'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
         return render(request, 'main/my_company/my_company.html', {'form': CompanyForm})
 
     def post(self, request):
