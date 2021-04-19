@@ -52,6 +52,7 @@ urlpatterns = [
     path('myresume/<int:pk>/delete/', resume.MyResumeDeleteView.as_view(), name='my_resume_delete'),
     path('search/', mv.VacancySearchView.as_view(), name='vacancy_search'),
     path('resume/<int:pk>', mv.ResumeView.as_view(), name='resume'),
+    path('resume/<int:resume_id>/sendmail/', mv.SendMailView.as_view(), name='send_mail'),
     path('tinymce/', include('tinymce.urls')),
 ]
 

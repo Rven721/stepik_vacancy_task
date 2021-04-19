@@ -135,3 +135,10 @@ class ResumeForm(forms.ModelForm):
                   'experience': 'Опыт',
                   'portfolio': 'Портфолио',
                   }
+
+
+class SendMailForm(forms.Form):
+    title = forms.CharField(max_length=120, label='Тема')
+    email = forms.EmailField(label="От кого")
+    to = forms.EmailField(label="Кому")
+    message = forms.CharField(widget=TinyMCE, label='Сообщение')

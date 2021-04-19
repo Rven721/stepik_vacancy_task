@@ -1,9 +1,10 @@
+from django.core.mail import send_mail
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, reverse
+from django.shortcuts import get_object_or_404, render, reverse, redirect
 from django.views.generic import TemplateView, DetailView, View, ListView
 
-from main.forms import ApplicationForm
+from main.forms import ApplicationForm, SendMailForm
 from main.models import Company, Specialty, Vacancy, Resume
 
 
@@ -103,3 +104,24 @@ class VacancySearchView(ListView):
             Q(specialty__code__icontains=query) |
             Q(specialty__title__icontains=query),
         )
+
+
+class SendMailView(View):
+
+    def get(self, request, resume_id):
+        form = SendMailForm()
+        return render(request, 'main/send_mail.html', {'form': form})
+
+    def post(self, request, resume_id):
+        form = SendMailForm(request.POST)
+        if form.is_valid():
+            form_data = form.cleaned_data
+            send_mail(
+                form_data['title'],
+                form_data['message'],
+                form_data['email'],
+                [form_data['to']],
+                fail_silently=False
+            )
+            return redirect('my_company_vacancies')
+        return render(request, 'main/send_mail.html', {'form': form})
