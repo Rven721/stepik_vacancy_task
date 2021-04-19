@@ -1,0 +1,28 @@
+{% extends 'main//base/account_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Пригласить кандидата {% endblock %}
+
+
+{% block content %}
+<main class="container mt-3 pb-5">
+    <div class="row mt-5">
+        <div class="col-12 col-lg-2">
+            <div class="pl-3 mb-5">
+                <p><a href="{{request.META.HTTP_REFERER}}">Назад</a></p>
+            </div>
+        </div>
+    </div>
+        <section class="col-12 col-lg-8 offset-lg-3 pt-2 card">
+        <div class="card-body px-3 pb-4">
+        <div class="col-12 col-lg-8">
+            <form class="pl-3" method="post">
+              {% csrf_token %}
+              {{form|crispy}}
+              <input type="submit" class="btn btn-outline-success" value="Отправить">
+            </form>
+        </div>
+        </div>
+        </section>
+</main>
+{% endblock %}
